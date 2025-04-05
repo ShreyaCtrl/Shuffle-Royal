@@ -1,0 +1,72 @@
+html, body {
+  margin: 0px;
+  padding: 0px;
+  height: 100%;
+  
+}
+.app {
+  background-image: url(./assets/gameBackground.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* width:100%; */
+  height:100vh;
+   background-attachment: fixed;
+   background-position: center;
+
+}
+
+:root {
+  --color-bg: #fef6e4;
+  --color-card: #fcd5ce;
+  --color-primary: #f582ae;
+  --color-secondary: #8bd3dd;
+  --color-accent: #f9bc60;
+  --color-text: #001858;
+  --color-muted: #555;
+  --color-hover: #ff8fab;
+
+  --font-fancy: "Poppins", sans-serif;
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  
+  --mobile: 768px;
+  --tablet: 1024px;
+  --desktop: 1440px;
+}
+
+/* Applying global styles */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-fancy);
+}
+
+/* Card styling */
+.card {
+  background-color: var(--color-card);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons */
+.button {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-2xl);
+  font-weight: bold;
+  transition: 0.3s ease-in-out;
+}
+
+.button:hover {
+  background-color: var(--color-hover);
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  font-family: var(--font-fancy);
+  color: var(--color-text);
+}
+

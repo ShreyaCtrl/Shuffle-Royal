@@ -1,5 +1,5 @@
 import redis
-from config import host, password, username, port
+from .config import host, password, username, port
 
 def redis_connect():
     try:

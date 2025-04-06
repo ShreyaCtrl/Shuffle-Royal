@@ -91,53 +91,67 @@ const cardImages = {
   "10Diamond": Diamond10,
   "10Heart": Heart10,
   "10Spade": Spade10,
-  "JackClub": JackClub,
-  "JackDiamond": JackDiamond,
-  "JackHeart": JackHeart,
-  "JackSpade": JackSpade,
-  "QueenClub": QueenClub,
-  "QueenDiamond": QueenDiamond,
-  "QueenHeart": QueenHeart,
-  "QueenSpade": QueenSpade,
-  "KingClub": KingClub,
-  "KingDiamond": KingDiamond,
-  "KingHeart": KingHeart,
-    "KingSpade": KingSpade,
-    "AceClub": AceClub,
-    "AceDiamond": AceDiamond,
-    "AceHeart": AceHeart,
-    "AceSpade": AceSpade,
-    "1Background": Background1,
+  JackClub: JackClub,
+  JackDiamond: JackDiamond,
+  JackHeart: JackHeart,
+  JackSpade: JackSpade,
+  QueenClub: QueenClub,
+  QueenDiamond: QueenDiamond,
+  QueenHeart: QueenHeart,
+  QueenSpade: QueenSpade,
+  KingClub: KingClub,
+  KingDiamond: KingDiamond,
+  KingHeart: KingHeart,
+  KingSpade: KingSpade,
+  AceClub: AceClub,
+  AceDiamond: AceDiamond,
+  AceHeart: AceHeart,
+  AceSpade: AceSpade,
+  "1Background": Background1,
 };
 
 class Deck {
-    constructor() {
-        this.suits = ["Club", "Diamond", "Heart", "Spade"];
-        this.ranks = [{ name: "2", value: 2 }, { name: "3", value: 3 }, { name: "4", value: 4 }, { name: "5", value: 5 }, { name: "6", value: 6 }, { name: "7", value: 7 }, { name: "8", value: 8 }, { name: "9", value: 9 }, { name: "10", value: 10 }, { name: "Jack", value: 11 }, { name: "Queen", value: 12 }, { name: "King", value: 13 }, { name: "Ace", value: 14 }];
-        this.cards = this.initializeDeck();
-        this.shuffleDeck();
+  constructor() {
+    this.suits = ["Club", "Diamond", "Heart", "Spade"];
+    this.ranks = [
+      { name: "2", value: 2 },
+      { name: "3", value: 3 },
+      { name: "4", value: 4 },
+      { name: "5", value: 5 },
+      { name: "6", value: 6 },
+      { name: "7", value: 7 },
+      { name: "8", value: 8 },
+      { name: "9", value: 9 },
+      { name: "10", value: 10 },
+      { name: "Jack", value: 11 },
+      { name: "Queen", value: 12 },
+      { name: "King", value: 13 },
+      { name: "Ace", value: 14 },
+    ];
+    this.cards = this.initializeDeck();
+    this.shuffleDeck();
+  }
+  initializeDeck() {
+    let deck = [];
+    for (let suit of this.suits) {
+      for (let rank of this.ranks) {
+        deck.push({
+          suit: suit,
+          rank: rank.name,
+          value: rank.value,
+          image: cardImages[`${rank.name}${suit}`],
+        });
+      }
     }
-    initializeDeck() { 
-        let deck = [];
-        for (let suit of this.suits) {
-            for (let rank of this.ranks) {
-                deck.push({
-                    suit: suit,
-                    rank: rank.name,
-                    value: rank.value,
-                    image: cardImages[`${rank.name}${suit}`]
-                });
-            }
-        }
-        return deck;
-    }
+    return deck;
+  }
 
-    shuffleDeck() {
-        for (let i = this.cards.length - 1; i > 0; i--) {
-            let j = Math.floor(Math.random() * (i + 1));
-            [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]];
-        }
+  shuffleDeck() {
+    for (let i = this.cards.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]];
     }
+  }
 }
 
 export { Deck };

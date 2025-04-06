@@ -1,2 +1,8 @@
 python-dotenv
 redis
+pymongo
+motor
+starlette
+uvicorn
+Flask
+requests

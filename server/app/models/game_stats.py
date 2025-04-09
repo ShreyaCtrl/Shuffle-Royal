@@ -1,14 +1,15 @@
-game_schema = {
-    "game_id": str,
-    "player_scores": [
-        {
-            # Player id here is the object id of the user in the collection of users data 
-            "player_id": str,
-            "score": int,
-            "username": str,
-        }
-    ],
-    "winner": str, 
-    "created_at": str,
-    "ended_at": str
-}
+from mongoengine import Document, StringField, IntField, DateTimeField, ListField, EmbeddedDocumentField, EmbeddedDocument
+from datetime import datetime 
+
+class PlayerScore_Schema(EmbeddedDocument):
+    # The player_id is the same as the user_id in the User_Schema
+    # player_id = StringField(required=True)
+    player_name = StringField(required=True)
+    player_score = IntField(required=True, default=0)
+
+class GameStats_Schema(Document):
+    gamestats_id = StringField(required=True, unique=True)
+    player_scores = ListField(EmbeddedDocumentField(PlayerScore_Schema), default=[])
+    winner = StringField(required=True)
+    created_at = DateTimeField(default=datetime.now)
+    ended_at = DateTimeField(default=None)

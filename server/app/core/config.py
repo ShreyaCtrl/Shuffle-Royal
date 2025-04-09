@@ -19,3 +19,8 @@ client_secret = os.getenv("GOOGLE_CLIENT_SECRET")
 cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME')
 api_key = os.getenv('CLOUDINARY_API_KEY')
 api_secret = os.getenv('CLOUDINARY_API_SECRET')
+
+# loading jwt environment variables
+private_key = os.getenv("OPENSSH_PRIVATE_KEY")
+public_key = os.getenv("OPENSSH_PUBLIC_KEY")
+jwt_algorithm = os.getenv("OPENSSH_JWT_ALGORITHM")

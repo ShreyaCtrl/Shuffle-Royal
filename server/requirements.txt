@@ -7,4 +7,5 @@ uvicorn
 Flask
 requests
 cloudinary
-PyJWT   
+PyJWT
+authlib

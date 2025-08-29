@@ -13,6 +13,6 @@ def oauth_connect(app):
         access_token_params=None,
         authorize_url='https://accounts.google.com/o/oauth2/auth',
         authorize_params=None, api_base_url='https://www.googleapis.com/oauth2/v1/',
-        client_kwargs={'scope': 'openid email profile'}
+        client_kwargs={'scope': 'email profile'}
     )
-    return google
+    return oauth, google

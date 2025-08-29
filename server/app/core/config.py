@@ -6,9 +6,9 @@ load_dotenv('../../.env')
 host = os.getenv("REDIS_HOST")
 username = os.getenv("REDIS_USERNAME")
 password = os.getenv("REDIS_PASSWORD")
+port = os.getenv("REDIS_PORT")
 
 # Loading mongodb environment variables
-port = os.getenv("REDIS_PORT")
 db_url = os.getenv("MONGODB")
 
 # Loading google oauth environment variables

@@ -10,7 +10,7 @@ import GameMenu from './pages/GameMenu/GameMenu.jsx'
 function App() {
 
   return (
-    <div className="">
+    <div className="app">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />

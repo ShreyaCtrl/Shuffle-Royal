@@ -5,6 +5,8 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from app.models.users import User_Schema
 from app.core.config import client_id
+from app.utils.username_generator import generate_unique_username
+
 
 users_bp = Blueprint("users", __name__)
 
@@ -80,6 +82,8 @@ def register_user():
     username = data.get("username")
     confirm_password = data.get("confirmPassword")
 
+    username_gen = generate_unique_username(username)
+
     # 1️⃣ Check for missing fields
     if not email or not password or not confirm_password:
         return jsonify({"status": "error", "message": "All fields are required"}), 400
@@ -109,42 +113,93 @@ def register_user():
             "email": new_user.email
         }
     }), 201
+#
+# @users_bp.route("/auth/google", methods=["POST"])
+# def google_auth():
+#     data = request.get_json()
+#     token = data.get("token")
+#     print(token)
+#
+#     if not token:
+#         return jsonify({"status": "error", "message": "No token provided"}), 400
+#
+#     try:
+#         # Verify JWT token with Google
+#         idinfo = id_token.verify_oauth2_token(token, google_requests.Request(), client_id)
+#         print(idinfo)
+#         email = idinfo.get("email")
+#         name = idinfo.get("name")
+#         picture = idinfo.get("picture")
+#         google_id = idinfo.get("sub")  # unique Google ID
+#
+#         # Check if user exists
+#         user = User_Schema.objects(email=email, username=name, google_id=google_id, avatar =picture).first()
+#         if not user:
+#             # Create new user if doesn't exist
+#             user = User_Schema(
+#                 email=email,
+#                 username=name,
+#                 google_id=google_id,
+#                 avatar=picture
+#             ).save()
+#
+#         # Log the user in by starting a session
+#         session["user"] = {"id": str(user.id), "email": user.email}
+#
+#         return jsonify({
+#             "status": "success",
+#             "message": "Logged in with Google",
+#             "user": {
+#                 "id": str(user.id),
+#                 "email": user.email,
+#                 "username": user.username,
+#                 "avatar": user.avatar
+#             }
+#         })
+#
+#     except ValueError:
+#         return jsonify({"status": "error", "message": "Invalid token"}), 400
 
 @users_bp.route("/auth/google", methods=["POST"])
 def google_auth():
     data = request.get_json()
     token = data.get("token")
-    print(token)
 
     if not token:
         return jsonify({"status": "error", "message": "No token provided"}), 400
 
     try:
-        # Verify JWT token with Google
+        # ✅ Verify JWT token with Google
         idinfo = id_token.verify_oauth2_token(token, google_requests.Request(), client_id)
-        print(idinfo)
         email = idinfo.get("email")
         name = idinfo.get("name")
         picture = idinfo.get("picture")
         google_id = idinfo.get("sub")  # unique Google ID
+        username_gen = generate_unique_username(name)
 
-        # Check if user exists
-        user = User_Schema.objects(email=email, username=name, google_id=google_id, avatar =picture).first()
+        # ✅ Check if user already exists by google_id or email
+        user = User_Schema.objects.filter(__raw__={"$or": [{"google_id": google_id}, {"email": email}]}).first()
+
         if not user:
-            # Create new user if doesn't exist
+            # ✅ Create a new user only if they don't exist
             user = User_Schema(
                 email=email,
-                username=name,
+                username=username_gen,
                 google_id=google_id,
                 avatar=picture
             ).save()
+            message = "Registered new user via Google"
+        # else:
+        #     # ✅ Update existing user’s name/picture if changed
+        #     user.update(username=user, avatar=picture)
+        #     message = "Logged in existing Google user"
 
-        # Log the user in by starting a session
+        # ✅ Log the user in by starting a session
         session["user"] = {"id": str(user.id), "email": user.email}
 
         return jsonify({
             "status": "success",
-            "message": "Logged in with Google",
+            "message": message,
             "user": {
                 "id": str(user.id),
                 "email": user.email,

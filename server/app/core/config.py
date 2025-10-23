@@ -10,6 +10,7 @@ port = os.getenv("REDIS_PORT")
 
 # Loading mongodb environment variables
 db_url = os.getenv("MONGODB")
+db_name = os.getenv("DB_NAME")
 
 # Loading google oauth environment variables
 client_id = os.getenv("GOOGLE_CLIENT_ID")

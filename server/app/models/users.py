@@ -2,11 +2,11 @@ from mongoengine import Document, StringField, DateTimeField, IntField, ListFiel
 from datetime import datetime
 
 class User_Schema(Document):
-    _id = StringField(required=True, unique=True)
     username = StringField(required=True, unique=True)
     email= StringField(required=True, unique=True)
-    google_id = StringField(required=True, unique=True)
-    avatar = StringField(required=True ,default='')
+    google_id = StringField(required=False, unique=True)
+    avatar = StringField(required=True, default='')
+    password = StringField()
     games_played = IntField(default=0)
     games_won = IntField(default=0)
     friends= ListField(StringField(), default=[])

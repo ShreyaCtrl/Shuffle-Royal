@@ -16,24 +16,42 @@ html, body {
 }
 
 :root {
-  --color-bg: #fef6e4;
-  --color-card: #fcd5ce;
-  --color-primary: #f582ae;
-  --color-secondary: #8bd3dd;
-  --color-accent: #f9bc60;
-  --color-text: #001858;
-  --color-muted: #555;
-  --color-hover: #ff8fab;
+  /* 🎲 Game Night Vibes – Energetic and Social */
+  --card-bg-primary: #FFB74D;     /* Main card background */
+  --card-accent-orange: #FF8A65;  /* Button hover, highlights */
+  --card-accent-blue: #64B5F6;    /* Player info, badges */
+  --card-accent-teal: #4DB6AC;    /* Secondary buttons */
+  --card-accent-purple: #B39DDB;  /* Decorative borders */
 
-  --font-fancy: "Poppins", sans-serif;
+  /* 🧙 Fantasy Quest – Mystical and Immersive */
+  --theme-quest-purple: #6A1B9A;  /* Modal headers, fantasy elements */
+  --theme-quest-lavender: #AB47BC; /* Tooltip backgrounds */
+  --theme-quest-indigo: #7E57C2;  /* Card rarity indicators */
+  --theme-quest-sky: #42A5F5;     /* Action buttons */
+  --theme-quest-cyan: #29B6F6;    /* Progress bars */
 
-  --radius-xl: 1rem;
-  --radius-2xl: 1.5rem;
-  
-  --mobile: 768px;
-  --tablet: 1024px;
-  --desktop: 1440px;
+  /* 🕹️ Retro Arcade – Bold and Nostalgic */
+  --theme-arcade-red: #FF5252;    /* Error states, alerts */
+  --theme-arcade-yellow: #FFD740; /* Score highlights */
+  --theme-arcade-green: #00E676;  /* Success states */
+  --theme-arcade-blue: #2979FF;   /* Navigation links */
+  --theme-arcade-pink: #FF4081;   /* Special effects */
+
+  /* 🌲 Woodland Adventure – Calm and Natural */
+  --theme-woodland-brown: #4E342E; /* Footer background */
+  --theme-woodland-tan: #A1887F;   /* Card borders */
+  --theme-woodland-cream: #D7CCC8; /* Background panels */
+  --theme-woodland-leaf: #C5E1A5;  /* Hover states */
+  --theme-woodland-green: #81C784; /* Success messages */
+
+  /* 🚀 Space Odyssey – Elegant and Futuristic */
+  --theme-space-navy: #1A237E;     /* Header background */
+  --theme-space-midnight: #283593; /* Sidebar */
+  --theme-space-pastel-blue: #7986CB; /* Card glow */
+  --theme-space-light: #C5CAE9;    /* Input fields */
+  --theme-space-accent: #E8EAF6;   /* Background overlays */
 }
+
 
 /* Applying global styles */
 body {

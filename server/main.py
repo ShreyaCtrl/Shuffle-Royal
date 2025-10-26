@@ -1,8 +1,18 @@
+import eventlet
+eventlet.monkey_patch()
+from dotenv import load_dotenv
+load_dotenv('.env')
+
+from flask_socketio import SocketIO
+from flask import Flask, redirect, url_for, session
+from flask_cors import CORS
+
 from app.core.connect_mongo import mongo_connect
 from app.api.users_api import init_oauth
-from flask import Flask, redirect, url_for, session
+from app.core.connect_redis import redis_connect
 from app.api.users_api import users_bp
-from flask_cors import CORS
+from app.core.config import redis_uri
+from app.api.game_api import game_bp
 
 app = Flask(__name__)
 CORS(
@@ -15,15 +25,26 @@ CORS(
 app.secret_key = 'aksdwodkfjksdfjwo'
 app.secret_key = "random_secret_key"
 app.config["SESSION_TYPE"] = "filesystem"
-app.config["SECRET_KEY"] = "some_secret_key"
 app.config["SESSION_COOKIE_SAMESITE"] = "None"
 app.config["SESSION_COOKIE_SECURE"] = False  # True if using HTTPS
 app.config["SESSION_COOKIE_DOMAIN"] = "localhost"
+app.config["SECRET_KEY"] = "some_secret_key"
+
+
+# socketio = SocketIO(app, cors_allowed_origins="*")
 
 db = mongo_connect()
 init_oauth(app)
 
-app.register_blueprint(users_bp)
+# redis_client = redis_connect()
 
+app.register_blueprint(users_bp)
+app.register_blueprint(game_bp)
+
+# app = Flask(__name__)
+# print(redis_uri, '------------------------------main.py')
+socketio = SocketIO(app, async_mode='eventlet', message_queue=redis_uri)  # Optional: specify async mode
+#
 if __name__ == '__main__':
-    app.run(debug=True, host="localhost", port=5000)
+    # app.run(port=5000, host='localhost', debug=True)
+    socketio.run(app, host="0.0.0.0", port=5000, debug=True)

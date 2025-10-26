@@ -21,7 +21,6 @@ def login_google():
     redirect_uri = url_for("users.auth_callback", _external=True)
     return google.authorize_redirect(redirect_uri)
 
-
 @users_bp.route("/auth/callback", endpoint="auth_callback", methods=["GET"])
 def authorize():
     token = google.authorize_access_token()
@@ -48,31 +47,26 @@ def authorize():
         }
     })
 
-@users_bp.route("/login", methods=["GET", "POST"])
+@users_bp.route("/login", methods=["POST"])
 def login_form():
-    if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")
+    data = request.get_json()  # <-- parse JSON
+    email = data.get("email")
+    password = data.get("password")
 
-        user = User_Schema.objects(email=email).first()
-        if user and hasattr(user, "password") and check_password_hash(user.password, password):
-            session["user"] = {"id": str(user.id), "email": user.email}
-            return jsonify({
-                "status": "success",
-                "message": "Login successful",
-                "user": {
-                    "id": str(user.id),
-                    "email": user.email,
-                    "username": user.username
-                }
-            })
-        else:
-            return jsonify({"status": "error", "message": "Invalid email or password"}), 401
-
-    return jsonify({
-        "status": "info",
-        "message": "Use POST with email & password to login, or visit /login/google for Google login"
-    })
+    user = User_Schema.objects(email=email).first()
+    if user and hasattr(user, "password") and check_password_hash(user.password, password):
+        session["user"] = {"id": str(user.id), "email": user.email}
+        return jsonify({
+            "status": "success",
+            "message": "Login successful",
+            "user": {
+                "id": str(user.id),
+                "email": user.email,
+                "username": user.username
+            }
+        })
+    else:
+        return jsonify({"status": "error", "message": "Invalid email or password"}), 401
 
 @users_bp.route("/register", methods=["POST"])
 def register_user():
@@ -166,7 +160,8 @@ def google_auth():
     token = data.get("token")
 
     if not token:
-        return jsonify({"status": "error", "message": "No token provided"}), 400
+        message = "Missing Google ID token"
+        return jsonify({"status": "error", "message": message}), 400
 
     try:
         # ✅ Verify JWT token with Google
@@ -176,6 +171,7 @@ def google_auth():
         picture = idinfo.get("picture")
         google_id = idinfo.get("sub")  # unique Google ID
         username_gen = generate_unique_username(name)
+        message = "Google login failed — email not found"
 
         # ✅ Check if user already exists by google_id or email
         user = User_Schema.objects.filter(__raw__={"$or": [{"google_id": google_id}, {"email": email}]}).first()
@@ -189,10 +185,10 @@ def google_auth():
                 avatar=picture
             ).save()
             message = "Registered new user via Google"
-        # else:
+        else:
+            message = "Logged in existing Google user"
         #     # ✅ Update existing user’s name/picture if changed
         #     user.update(username=user, avatar=picture)
-        #     message = "Logged in existing Google user"
 
         # ✅ Log the user in by starting a session
         session["user"] = {"id": str(user.id), "email": user.email}
@@ -208,5 +204,8 @@ def google_auth():
             }
         })
 
-    except ValueError:
-        return jsonify({"status": "error", "message": "Invalid token"}), 400
+
+    except Exception as e:
+        print(f"Google auth error: {e}")
+        message = f"Google authentication failed: {str(e)}"
+        return jsonify({"status": "error", "message": message}), 500

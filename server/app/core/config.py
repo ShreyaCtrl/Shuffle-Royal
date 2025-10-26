@@ -3,10 +3,12 @@ import os
 load_dotenv('../../.env')
 
 # Loading redis environment variables
-host = os.getenv("REDIS_HOST")
+host = os.environ.get("REDIS_HOST")
 username = os.getenv("REDIS_USERNAME")
 password = os.getenv("REDIS_PASSWORD")
 port = os.getenv("REDIS_PORT")
+redis_uri = f'redis://{username}:{password}@{host}:{15034}/0'
+print(redis_uri, '-------------------------config.py')
 
 # Loading mongodb environment variables
 db_url = os.getenv("MONGODB")

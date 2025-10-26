@@ -15,6 +15,25 @@
     width: 400px; 
 }
 
+/* Base: keep as-is for larger screens */
+.signup-page {
+  width: 400px;
+  border-radius: 1rem;
+  margin: auto;
+  /* ensure it can shrink when needed */
+  box-sizing: border-box;
+}
+
+@media screen and (orientation: landscape) and (max-width: 768px) {
+  .signup-page {
+    width: 100%;
+    height: 100%;
+    border-radius: 0rem;
+    display: block; /* Ensure visibility */
+    overflow: auto; /* Prevent clipping */
+  }
+}
+
 @media not all and (min-width: 400px) {
     .signup-page {
         width: 100%;
@@ -22,6 +41,15 @@
         border-radius: 0rem;
     }
 }
+
+/* @media (max-width: 768px) and (orientation: landscape) {
+  .signup-page {
+    width: 100%;
+    min-height: auto; 
+    overflow-y: auto; 
+    border-radius: 0;
+  }
+} */
 
 .input-clicked-signup:focus {
     outline: none;

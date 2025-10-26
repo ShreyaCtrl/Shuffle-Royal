@@ -1,28 +1,28 @@
 import { useState, useEffect } from "react";
-import { useNotifications } from "reapop";
-import { GOOGLE_CLIENT_ID, API_URL } from "../../config";
 import { useNavigate } from "react-router";
+import { GOOGLE_CLIENT_ID, API_URL } from "../../config";
+import { useNotifications } from "reapop";
 
-export default function useLogin() {
+export default function useSignUp() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const { notify } = useNotifications();
   const navigate = useNavigate();
+    const { notify } = useNotifications();
 
-  // ✅ Show a Reapop notification whenever message changes
-  useEffect(() => {
-    if (message) {
-      const isError = message.startsWith("❌");
-      const isSuccess = message.startsWith("✅");
+    // ✅ Show a Reapop notification whenever message changes
+    useEffect(() => {
+      if (message) {
+        const isError = message.startsWith("❌");
+        const isSuccess = message.startsWith("✅");
 
-      notify(message.replace(/^[✅❌]\s*/, ""), {
-        status: isError ? "error" : isSuccess ? "success" : "info",
-        dismissAfter: 3000,
-      });
-    }
-  }, [message, notify]);
+        notify(message.replace(/^[✅❌]\s*/, ""), {
+          status: isError ? "error" : isSuccess ? "success" : "info",
+          dismissAfter: 3000,
+        });
+      }
+    }, [message, notify]);
 
-  // ✅ Load Google GSI script only once
+  // ✅ Load Google GSI script once
   useEffect(() => {
     let mounted = true;
     const script = document.createElement("script");
@@ -30,11 +30,11 @@ export default function useLogin() {
     script.async = true;
     script.defer = true;
     document.body.appendChild(script);
-    console.log(GOOGLE_CLIENT_ID)
 
     script.onload = () => {
       if (!mounted) return;
-      console.log("Google GSI script loaded — initializing");
+      console.log("Google script loaded for SignUp");
+
       window.google?.accounts?.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
         callback: handleGoogleResponse,
@@ -45,18 +45,19 @@ export default function useLogin() {
       });
     };
 
-    script.onerror = (e) =>
+    script.onerror = (e) => {
       console.error("Failed to load Google GSI script", e);
+    };
 
     return () => {
       mounted = false;
     };
   }, []);
 
-  // ✅ Handle Google response
+  // ✅ Handle Google response (FedCM)
   const handleGoogleResponse = async (response) => {
     if (!response || !response.credential) {
-      console.warn("No Google credential:", response);
+      console.warn("No Google credential in response:", response);
       return;
     }
 
@@ -73,41 +74,51 @@ export default function useLogin() {
 
       const data = await res.json();
       if (data.status === "success") {
-        setMessage("✅ Google login successful!");
-        setTimeout(() => navigate("/game-desc"), 1000);
+        setMessage("✅ Google registration/login successful!");
+        // setTimeout(() => navigate("/game-desc"), 1000);
       } else {
         setMessage(`❌ ${data.message}`);
       }
     } catch (err) {
-      console.error("Google login error:", err);
-      setMessage("❌ Google login failed");
+      console.error("Google signup error:", err);
+      setMessage("❌ Google signup failed");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Trigger Google login prompt manually
-  const handleGoogleLogin = (e) => {
+  // ✅ Trigger FedCM Google signup
+  const handleGoogleRegister = (e) => {
     e?.preventDefault?.();
     if (!window.google || !window.google.accounts) {
-      setMessage("❌ Google SDK not loaded yet.");
+      setMessage("❌ Google SDK not loaded yet. Try again in a moment.");
+      console.warn("Google SDK not loaded on handleGoogleRegister");
       return;
     }
 
     try {
       window.google.accounts.id.disableAutoSelect();
       window.google.accounts.id.prompt();
-      console.log("FedCM prompt triggered for login");
+      console.log("FedCM prompt triggered for Google Signup");
     } catch (err) {
-      console.error("FedCM prompt error:", err);
+      console.error("Error triggering Google prompt:", err);
       setMessage("❌ Could not open Google sign-in. Try again.");
     }
   };
 
-  // ✅ Email login
-  const handleEmailLogin = async (email, password) => {
-    if (!email || !password) {
+  // ✅ Handle email-based registration
+  const handleEmailRegister = async (
+    email,
+    username,
+    password,
+    confirmPassword
+  ) => {
+    if (!email || !password || !confirmPassword || !username) {
       setMessage("❌ Please fill all fields");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setMessage("❌ Passwords do not match");
       return;
     }
 
@@ -115,31 +126,31 @@ export default function useLogin() {
     setMessage("");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, confirmPassword, username }),
         credentials: "include",
       });
 
       const data = await res.json();
       if (data.status === "success") {
-        setMessage("✅ Login successful!");
+        setMessage("✅ Registration successful!");
         setTimeout(() => navigate("/game-desc"), 1000);
       } else {
         setMessage(`❌ ${data.message}`);
       }
     } catch (err) {
-      console.error("Email login error:", err);
-      setMessage("❌ Login failed");
+      console.error("Email signup failed:", err);
+      setMessage("❌ Registration failed");
     } finally {
       setLoading(false);
     }
   };
 
   return {
-    handleGoogleLogin,
-    handleEmailLogin,
+    handleGoogleRegister,
+    handleEmailRegister,
     loading,
     message,
   };

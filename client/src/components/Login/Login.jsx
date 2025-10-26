@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import { useNavigate } from "react-router";
+
 import "./Login.css";
 import Loader from "../../utils/Loader.jsx";
 import useLogin from "../../hooks/useLogin.jsx";
-import { GOOGLE_CLIENT_ID } from "../../../config.js";
-import { useNavigate } from "react-router";
-
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -146,7 +145,7 @@ const Login = () => {
   // };
 
   return (
-    <div className="flex justify-center items-center h-screen app">
+    <div className="flex justify-center items-center bg-gradient-login m-4">
       <div className="flex rounded-lg p-4 bg-shadow flex-col login-page-background login-page">
         <h1 className="flex font-bold items-center justify-center">
           Shuffle Royal
@@ -155,8 +154,8 @@ const Login = () => {
         {/* Log in Component */}
         <h1 className="text-lg mt-2 ">Log in</h1>
         <h2 className="text-sm ">Continue your gaming experience</h2>
-        <form className="mt-4" onSubmit={handleSubmit}>
-          <div className="flex flex-col p-1">
+        <form className="mt-4 " onSubmit={handleSubmit}>
+          <div className="flex flex-col p-1 form-group">
             <label htmlFor="email" className="mt-2 mb-1 text-xl">
               Email
             </label>
@@ -165,10 +164,10 @@ const Login = () => {
               name="email"
               id="email"
               onChange={(e) => setEmail(e.target.value)}
-              className="rounded-md text-lg border h-[2.5em] border-gray-400 input-clicked-login"
+              className="rounded-md input-field text-lg border h-[2.5em] border-gray-400 input-clicked-login"
             />
           </div>
-          <div className="flex flex-col p-1 mb-3">
+          <div className="flex flex-col p-1 mb-3 form-group">
             <label htmlFor="password" className="mt-2 mb-1 text-xl ">
               Password
             </label>
@@ -177,13 +176,13 @@ const Login = () => {
               name="password"
               id="password"
               onChange={(e) => setPassword(e.target.value)}
-              className="rounded-md  text-lg border h-[2.5em] border-gray-400 input-clicked-login "
+              className="rounded-md input-field text-lg border h-[2.5em] border-gray-400 input-clicked-login "
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="border items-center justify-center rounded-lg p-2 flex mt-3 mb-2 w-full hover:bg-gray-200"
+            className="border button-primary items-center justify-center rounded-lg p-2 flex mt-3 mb-2 w-full hover:bg-gray-200"
           >
             {loading ? (
               // <p className="flex ">Logging in...</p>
@@ -203,8 +202,7 @@ const Login = () => {
             <button
               onClick={handleGoogleLogin}
               disabled={loading}
-
-              className="border items-center justify-center rounded-lg p-2 flex mt-3 mb-2 w-full hover:bg-gray-200"
+              className="border button-secondary items-center justify-center rounded-lg p-2 flex mt-3 mb-2 w-full hover:bg-gray-200"
             >
               {loading ? (
                 <Loader />
@@ -219,7 +217,7 @@ const Login = () => {
           <div className="flex mt-2">
             <p className="text-sm mr-1">New to Shuffle Royal ?</p>
             <p
-              className="text-blue-500 hover:underline text-sm "
+              className="links hover:underline text-sm"
               onClick={handleNavigateToSignup}
             >
               Register Now

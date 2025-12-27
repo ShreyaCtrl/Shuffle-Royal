@@ -11,8 +11,17 @@ redis_uri = f'redis://{username}:{password}@{host}:{15034}/0'
 print(redis_uri, '-------------------------config.py')
 
 # Loading mongodb environment variables
-db_url = os.getenv("MONGODB")
-db_name = os.getenv("DB_NAME")
+# db_url = os.getenv("MONGODB")
+# db_name = os.getenv("DB_NAME")
+
+# Loading supabase postgreSQL database environment variables
+db_name = os.getenv('SUPABASE_DB_NAME')
+db_password = os.getenv('SUPABASE_DB_PASSWORD')
+db_url = os.getenv('SUPABASE_DATABASE_URL')
+db_host = os.getenv('SUPABASE_HOST')
+db_port = os.getenv('SUPABASE_PORT')
+db_user = os.getenv('SUPABASE_USER')
+db_database = os.getenv('SUPABASE_DATABASE')
 
 # Loading google oauth environment variables
 client_id = os.getenv("GOOGLE_CLIENT_ID")

@@ -7,17 +7,21 @@ from flask_socketio import SocketIO
 from flask import Flask, redirect, url_for, session
 from flask_cors import CORS
 
-from app.core.connect_mongo import mongo_connect
-from app.api.users_api import init_oauth
-from app.core.connect_redis import redis_connect
-from app.api.users_api import users_bp
+# from app.core.connect_mongo import mongo_connect
 from app.core.config import redis_uri
-from app.api.game_api import game_bp
+from app.core.connect_redis import redis_connect
+from app.core.connect_supabase import supabase_connect
+from app.api.users_api import init_oauth
+# from app.models.users import User_Schema
+# from app.models.game_result import Game_Result  # Import models first
+# from app.signals.game_signals import update_user_stats
+# from app.api.users_api import users_bp
+# from app.api.game_api import game_bp
 
 app = Flask(__name__)
 CORS(
     app,
-    origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    origins=["http://localhost:5173", "http://127.0.0.1:5173", "https://a00b7d19a523.ngrok-free.app"],
     supports_credentials=True,
     methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"]
@@ -33,17 +37,18 @@ app.config["SECRET_KEY"] = "some_secret_key"
 
 # socketio = SocketIO(app, cors_allowed_origins="*")
 
-db = mongo_connect()
+# db = mongo_connect()
+db = supabase_connect()
 init_oauth(app)
 
-# redis_client = redis_connect()
+redis_client = redis_connect()
 
-app.register_blueprint(users_bp)
-app.register_blueprint(game_bp)
+# app.register_blueprint(users_bp)
+# app.register_blueprint(game_bp)
 
 # app = Flask(__name__)
 # print(redis_uri, '------------------------------main.py')
-socketio = SocketIO(app, async_mode='eventlet', message_queue=redis_uri)  # Optional: specify async mode
+socketio = SocketIO(app, async_mode='eventlet', message_queue=redis_uri, ping_timeout=60, ping_interval=30)  # Optional: specify async mode
 #
 if __name__ == '__main__':
     # app.run(port=5000, host='localhost', debug=True)

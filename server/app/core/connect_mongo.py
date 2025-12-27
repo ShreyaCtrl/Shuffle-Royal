@@ -10,7 +10,7 @@ def mongo_connect():
             host=db_url,
             alias="default"
         )
-        print("MongoDB is connected")
+        print("✅ MongoDB is connected")
     except Exception as e:
         print("MongoDB connection failed : ", e)
         return None

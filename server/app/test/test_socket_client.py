@@ -19,7 +19,7 @@ def disconnect():
     print("❌ Disconnected from server.")
 
 # Connect to Flask-SocketIO backend
-sio.connect("http://0.0.0.0:5000")
+sio.connect("http://localhost:5000")
 
 # Join a room
 sio.emit("join_room", {"username": "player1", "room": "AB12"})
@@ -29,3 +29,4 @@ sio.emit("submit_prediction", {"username": "player1", "room": "AB12", "predictio
 
 # Wait for events
 sio.wait()
+

@@ -1,10 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
+from app.extensions import db
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from datetime import datetime
-
-db = SQLAlchemy()
-
 
 class Game(db.Model):
     __tablename__ = 'games'
@@ -14,6 +11,8 @@ class Game(db.Model):
 
     rounds = db.relationship('Round', backref='game', lazy=True)
     total_scores = db.relationship('GameTotalScore', backref='game', lazy=True)
+
+
 # from mongoengine import Document, StringField, IntField, EmbeddedDocumentField, EmbeddedDocument, DateTimeField, ListField
 #
 # class Rules_Schema(EmbeddedDocument):

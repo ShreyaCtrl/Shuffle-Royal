@@ -1,10 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from datetime import datetime
-
-db = SQLAlchemy()
-
+from app.extensions import db
 
 class Round(db.Model):
     __tablename__ = 'rounds'

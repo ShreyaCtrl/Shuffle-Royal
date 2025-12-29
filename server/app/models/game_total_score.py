@@ -1,10 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
+from app.extensions import db
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from datetime import datetime
-
-db = SQLAlchemy()
-
 
 class GameTotalScore(db.Model):
     __tablename__ = 'game_total_scores'

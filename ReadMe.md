@@ -48,33 +48,33 @@ OPENSSH_PRIVATE_KEY='your_openssh_private_key_here'
 OPENSSH_PUBLIC_KEY='your_openssh_public_key_here'
 OPENSSH_JWT_ALGORITHM='HS256'
 ```
- 6. Create the database tables by running the following commands in a Python shell:
+6. Create the database tables by running the following commands in a Python shell:
    ```python
    from app.extensions import db
    db.create_all()
    ```  
-   7. Create the required Supabase functions and triggers as per the documentation.
-    8. Start the Redis server.
-    9. Start Celery (In Progress)
-    10. Run the Flask server:
-    ```bash 
-    flask run
-    ```
-    11. Start the React development server:
-    ```bash
-    npm run dev
-    ```
-    12. Access the application at `http://localhost:5173` (or the port specified by Vite).
-    13. Use Ngrok to expose your local server for testing webhooks and external API calls.
-    ngrok.yml specifies the configuration for Ngrok.
-    Run the command:
-    ```bash
-    ngrok start --all --config=ngrok.yml
-    ```
-    14. Update the `VITE_API_URL` in the client `.env` file with the Ngrok URL for the Flask server.
-    15. Add the frontend URL to CORS allowed origins in the Flask server configuration.
-    16. Add the frontend URL to the Google OAuth 2.0 credentials in the Google Cloud Console in the client in authorized origins.
-    17. Add the backend url to the Google OAuth 2.0 credentials in the Google Cloud Console in the server in authorized redirect URIs.
+7. Create the required Supabase functions and triggers as per the documentation.
+8. Start the Redis server.
+9. Start Celery (In Progress)
+10. Run the Flask server:
+```bash 
+flask run
+```
+11. Start the React development server:
+```bash
+npm run dev
+```
+12. Access the application at `http://localhost:5173` (or the port specified by Vite).
+13. Use Ngrok to expose your local server for testing webhooks and external API calls.
+ngrok.yml specifies the configuration for Ngrok.
+Run the command:
+```bash
+ngrok start --all --config=ngrok.yml
+```
+14. Update the `VITE_API_URL` in the client `.env` file with the Ngrok URL for the Flask server.
+15. Add the frontend URL to CORS allowed origins in the Flask server configuration.
+16. Add the frontend URL to the Google OAuth 2.0 credentials in the Google Cloud Console in the client in authorized origins.
+17. Add the backend url to the Google OAuth 2.0 credentials in the Google Cloud Console in the server in authorized redirect URIs.
 # Notes
 - Ensure that all environment variables are correctly set up in both the client and server `.env` files.
 - Make sure to handle any additional configurations required for deployment if deploying to a production environment.

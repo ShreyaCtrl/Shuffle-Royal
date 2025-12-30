@@ -9,5 +9,6 @@ export default defineConfig({
     headers: {
       "Referrer-Policy": "strict-origin-when-cross-origin",
     },
+    allowedHosts: ["72f5672a3fd1.ngrok-free.app"],
   },
 });

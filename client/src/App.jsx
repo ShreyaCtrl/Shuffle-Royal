@@ -8,6 +8,7 @@ import SignUp from "./components/SignUp/SignUp.jsx";
 import Landing from "./components/Landing/Landing.jsx";
 import GameDescription from "./components/GameDescription/GameDescription.jsx";
 import Scoreboard from "./components/ScoreBoard/Scoreboard.jsx";
+import ProfilePage from "./components/Profile/Profile.jsx";
 
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
           <Route path="scoreboard" element={<Scoreboard />} />
           <Route
             path="profile"
-            element={<div>Profile Page - Coming Soon!</div>}
+            element={<ProfilePage />}
           />
         </Routes>
         <NotificationsSystem

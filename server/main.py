@@ -17,6 +17,7 @@ from app.core.connect_supabase import supabase_connect
 # from app.models.game_result import Game_Result  # Import models first
 # from app.signals.game_signals import update_user_stats
 from app.api.users_api import users_bp
+from app.api.profile_api import profile_bp
 # from app.api.game_api import game_bp
 
 app = Flask(__name__)
@@ -32,11 +33,13 @@ app.config["SESSION_TYPE"] = "filesystem"
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-    "pool_pre_ping": True, # Helps keep the connection to Supabase alive
+    "pool_pre_ping": True  # Helps keep the connection to Supabase alive
 }
 app.config["SESSION_COOKIE_SAMESITE"] = "None"
 app.config["SESSION_COOKIE_SECURE"] = False  # True if using HTTPS
 app.config["SESSION_COOKIE_DOMAIN"] = "localhost"
+app.config["SESSION_COOKIE_SAMESITE"] = "None"
+app.config["SESSION_COOKIE_SECURE"] = True
 app.config["SECRET_KEY"] = "some_secret_key"
 
 
@@ -51,6 +54,7 @@ init_oauth(app)
 redis_client = redis_connect()
 
 app.register_blueprint(users_bp)
+app.register_blueprint(profile_bp)
 # app.register_blueprint(game_bp)
 
 # app = Flask(__name__)

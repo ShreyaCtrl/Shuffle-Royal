@@ -48,7 +48,7 @@ OPENSSH_PRIVATE_KEY='your_openssh_private_key_here'
 OPENSSH_PUBLIC_KEY='your_openssh_public_key_here'
 OPENSSH_JWT_ALGORITHM='HS256'
 ```
-6. Create the database tables by running the following commands in a Python shell:
+6. Create the database tables by running the following commands for the first flask api run:
    ```python
    from app.extensions import db
    db.create_all()
@@ -56,10 +56,7 @@ OPENSSH_JWT_ALGORITHM='HS256'
 7. Create the required Supabase functions and triggers as per the documentation.
 8. Start the Redis server.
 9. Start Celery (In Progress)
-10. Run the Flask server:
-```bash 
-flask run
-```
+10. Run the Flask server
 11. Start the React development server:
 ```bash
 npm run dev
@@ -288,4 +285,48 @@ CREATE TRIGGER update_room_overall_score
 AFTER INSERT OR UPDATE OR DELETE ON games
 FOR EACH ROW
 EXECUTE FUNCTION update_room_overall_score();
+```
+6. Function: update_game_ranks_on_status_change
+```sql 
+CREATE OR REPLACE FUNCTION update_game_ranks_on_status_change()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- CASE 1: Game inserted as 'completed' OR updated from 'pending' to 'completed'
+    IF (TG_OP = 'INSERT' AND NEW.status = 'completed') OR 
+       (TG_OP = 'UPDATE' AND NEW.status = 'completed' AND (OLD.status IS NULL OR OLD.status != 'completed')) THEN
+        
+        -- Use a Common Table Expression (CTE) to calculate ranks for this specific game
+        WITH ranked_players AS (
+            SELECT 
+                game_id, 
+                user_id,
+                RANK() OVER (PARTITION BY game_id ORDER BY total_score DESC) as new_rank
+            FROM game_total_scores
+            WHERE game_id = NEW.game_id
+        )
+        UPDATE game_total_scores gts
+        SET rank = rp.new_rank
+        FROM ranked_players rp
+        WHERE gts.game_id = rp.game_id 
+          AND gts.user_id = rp.user_id;
+
+    -- CASE 2: Game is deleted
+    -- Note: If you have ON DELETE CASCADE, the total_scores might disappear automatically.
+    -- If not, you may want to clear the ranks or handle cleanup here.
+    ELSIF (TG_OP = 'DELETE') THEN
+        -- Standard practice is to let foreign keys handle the deletion of score records,
+        -- but you can add custom cleanup logic here if necessary.
+        NULL; 
+    END IF;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+```
+Trigger: trg_update_ranks_on_game_completion
+```sql
+CREATE TRIGGER trg_update_ranks_on_game_completion
+AFTER INSERT OR UPDATE OR DELETE ON games
+FOR EACH ROW
+EXECUTE FUNCTION update_game_ranks_on_status_change();
 ```

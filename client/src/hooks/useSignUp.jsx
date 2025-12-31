@@ -14,8 +14,8 @@ export default function useSignUp() {
       if (message) {
         const isError = message.startsWith("❌");
         const isSuccess = message.startsWith("✅");
-
-        notify(message.replace(/^[✅❌]\s*/, ""), {
+        console.log("SignUp message:", message);
+        notify(message.replace(/^[✅❌]\s*/, message), {
           status: isError ? "error" : isSuccess ? "success" : "info",
           dismissAfter: 3000,
         });
@@ -65,7 +65,7 @@ export default function useSignUp() {
     setMessage("");
 
     try {
-      const res = await fetch(`${API_URL}/auth/google`, {
+      const res = await fetch(`${API_URL}/auth/callback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: response.credential }),
@@ -75,13 +75,13 @@ export default function useSignUp() {
       const data = await res.json();
       if (data.status === "success") {
         setMessage("✅ Google registration/login successful!");
-        // setTimeout(() => navigate("/game-desc"), 1000);
+        setTimeout(() => navigate("/game-desc"), 1000);
       } else {
         setMessage(`❌ ${data.message}`);
       }
     } catch (err) {
       console.error("Google signup error:", err);
-      setMessage("❌ Google signup failed");
+      setMessage("❌", err);
     } finally {
       setLoading(false);
     }

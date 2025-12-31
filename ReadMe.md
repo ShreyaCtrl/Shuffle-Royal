@@ -364,3 +364,9 @@ AFTER UPDATE OF overall_room_score ON room_members
 FOR EACH ROW
 EXECUTE FUNCTION update_room_member_ranks();
 ```
+
+# Loading icons
+- https://lottiefiles.com/free-animations/hourglass - Quest
+- https://lottiefiles.com/free-animations/growing-ivy - Woodland
+- https://lottiefiles.com/free-animations/pixellated-card-flip - Arcade
+- https://lottiefiles.com/free-animation/globe-A37pxTwfZY - Space

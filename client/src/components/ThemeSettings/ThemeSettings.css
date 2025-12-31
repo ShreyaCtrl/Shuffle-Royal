@@ -1,0 +1,78 @@
+/* Mapping Layer: Components use these variables */
+:root {
+
+  /* Default Fallback (Space Odyssey) */
+  --bg-app: var(--theme-space-navy);
+  --bg-card: var(--card-bg-primary);
+  --text-main: #000000;
+  --accent-primary: var(--theme-space-pastel-blue);
+  --accent-secondary: var(--theme-space-light);
+  --border-color: var(--theme-space-midnight);
+  --input-bg: var(--theme-space-accent);
+}
+
+/* 🧙 Fantasy Quest Theme */
+body.theme-quest {
+  --bg-app: var(--theme-quest-purple);
+  --bg-card: #ffffff;
+  --text-main: var(--theme-quest-purple);
+  --accent-primary: var(--theme-quest-sky);
+  --accent-secondary: var(--theme-quest-cyan);
+  --border-color: var(--theme-quest-indigo);
+  --input-bg: var(--theme-quest-lavender);
+}
+
+/* 🕹️ Retro Arcade Theme */
+body.theme-arcade {
+  --bg-app: #121212; /* Deep black for neon contrast */
+  --bg-card: #1e1e1e;
+  --text-main: var(--theme-arcade-yellow);
+  --accent-primary: var(--theme-arcade-pink);
+  --accent-secondary: var(--theme-arcade-blue);
+  --border-color: var(--theme-arcade-red);
+  --input-bg: #2a2a2a;
+}
+
+/* 🌲 Woodland Adventure Theme */
+body.theme-woodland {
+  --bg-app: var(--theme-woodland-brown);
+  --bg-card: var(--theme-woodland-cream);
+  --text-main: var(--theme-woodland-brown);
+  --accent-primary: var(--theme-woodland-green);
+  --accent-secondary: var(--theme-woodland-leaf);
+  --border-color: var(--theme-woodland-tan);
+  --input-bg: #ffffff;
+}
+
+/* 🚀 Space Odyssey Theme (Explicit) */
+body.theme-space {
+  --bg-app: var(--theme-space-navy);
+  --bg-card: var(--card-bg-primary);
+  --text-main: var(--theme-space-navy);
+  --accent-primary: var(--theme-space-pastel-blue);
+  --accent-secondary: var(--theme-space-midnight);
+  --border-color: var(--theme-space-light);
+  --input-bg: var(--theme-space-accent);
+}
+
+.app {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  transition: all 0.4s ease; /* Smoothly morphs colors when switching */
+}
+
+.card-primary {
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  color: var(--text-main);
+}
+
+.button-primary {
+  background-color: var(--accent-primary);
+  color: white;
+}
+
+.input-field {
+  background: var(--input-bg);
+  border-color: var(--border-color);
+}

@@ -330,3 +330,37 @@ AFTER INSERT OR UPDATE OR DELETE ON games
 FOR EACH ROW
 EXECUTE FUNCTION update_game_ranks_on_status_change();
 ```
+7. Function: update_room_member_ranks
+```sql
+CREATE OR REPLACE FUNCTION update_room_member_ranks()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Recalculate ranks for ALL members in the specific room where a score just changed
+    WITH ranked_members AS (
+        SELECT 
+            room_id, 
+            user_id,
+            RANK() OVER (
+                PARTITION BY room_id 
+                ORDER BY overall_room_score DESC
+            ) as new_rank
+        FROM room_members
+        WHERE room_id = NEW.room_id
+    )
+    UPDATE room_members rm
+    SET rank = ra.new_rank
+    FROM ranked_members ra
+    WHERE rm.room_id = ra.room_id 
+      AND rm.user_id = ra.user_id;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+```
+Trigger: trg_sync_room_ranks
+```sql 
+CREATE TRIGGER trg_sync_room_ranks
+AFTER UPDATE OF overall_room_score ON room_members
+FOR EACH ROW
+EXECUTE FUNCTION update_room_member_ranks();
+```

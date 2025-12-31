@@ -93,6 +93,10 @@ body {
   color: var(--theme-arcade-blue);
 }
 
+.links:hover {
+  text-decoration: underline;
+}
+
 /* === Layout utilities === */
 .flex-center {
   display: flex;

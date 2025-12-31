@@ -10,3 +10,4 @@ class RoomMember(db.Model):
     username = db.Column(db.String(50))
     status = db.Column(db.String(20), default='active')
     overall_room_score = db.Column(db.Integer, default=0)
+    rank = db.Column(db.Integer)

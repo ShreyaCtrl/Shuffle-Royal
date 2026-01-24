@@ -1,17 +1,67 @@
 import random, string
 from typing import List, Dict, Union
+from datetime import datetime
 from app.core.connect_redis import redis_connect
+from app.models import Room, db
 #
 redis_client = redis_connect()
+
+
 def generate_room_code(length=4):
     chars = string.ascii_uppercase + string.digits
     return ''.join(random.choices(chars, k=length))
 #
-def create_room():
-    room_code = generate_room_code()
-    redis_client.sadd(f"room:{room_code}:players", "")
-    return room_code
+
+
+def create_room(room_name: str, admin_id: str):
+    # Phase 1: Save to Postgres to get the official room_id
+    new_room = Room(name=room_name)
+    db.session.add(new_room)
+    db.session.commit()  # Database generates the UUID here
+
+    db_id = str(new_room.room_id)
+    room_code = generate_room_code()  # Your 4-digit code generator
+
+    # Phase 2: Initialize in Redis
+    metadata_key = f"room:{db_id}:metadata"
+    print(metadata_key)
+    room_metadata = {
+        "status": "active",
+        "name": room_name,
+        "created_at": datetime.utcnow().isoformat(),
+        "admin": admin_id,
+        "password": room_code  # Using room_code as password
+    }
+
+    # Store metadata and a reverse lookup for the 4-digit code
+    redis_client.hset(metadata_key, mapping=room_metadata)
+    redis_client.set(f"room_code:{room_code}", db_id)
+
+    return room_code, db_id
+
 #
+# def create_room(db_room_id: str, admin_id: str):
+#     room_code = generate_room_code()
+#     redis_client.sadd(f"room:{room_code}:players", "")
+#     # 2. Define the key using the Database ID for easy syncing later
+#     metadata_key = f"room:{db_room_id}:metadata"
+#
+#     # 3. Prepare metadata following your requested structure
+#     room_metadata = {
+#         "status": "active",
+#         "created_at": datetime.utcnow().isoformat(),
+#         "admin": admin_id,
+#         "password": room_code  # The code itself is the password
+#     }
+#
+#     # 4. Store in Redis
+#     redis_client.hset(metadata_key, mapping=room_metadata)
+#
+#     # 5. Create a reverse lookup (Helper Key)
+#     # Since users will type the 4-digit code to join, we need to find the db_id
+#     redis_client.set(f"room_code:{room_code}", db_room_id)
+#
+#     return room_code, db_room_id
 # def add_player_to_room(room_code, username):
 #     redis_client.sadd(f"room:{room_code}:players", username)
 #

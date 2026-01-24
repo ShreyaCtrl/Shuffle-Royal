@@ -12,6 +12,14 @@ class Game(db.Model):
     rounds = db.relationship('Round', backref='game', lazy=True)
     total_scores = db.relationship('GameTotalScore', backref='game', lazy=True)
 
+    def to_dict(self):
+        return {
+            "game_id": self.game_id,
+            "room_id": self.room_id,
+            "started_at": self.started_at
+        }
+
+
 
 # from mongoengine import Document, StringField, IntField, EmbeddedDocumentField, EmbeddedDocument, DateTimeField, ListField
 #

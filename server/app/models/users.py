@@ -17,6 +17,18 @@ class User(db.Model):
     # Relationships
     room_memberships = db.relationship('RoomMember', backref='user', lazy=True)
 
+    def to_dict(self):
+        return {
+            "user_id": self.user_id,
+            "username": self.username,
+            "email": self.email,
+            "google_id": self.google_id,
+            "password_hash": self.password_hash,
+            "avatar_url": self.avatar_url,
+            "games_played": self.games_played,
+            "games_won": self.games_won
+        }
+
 # from mongoengine import Document, StringField, DateTimeField, IntField, ListField
 # from datetime import datetime
 #

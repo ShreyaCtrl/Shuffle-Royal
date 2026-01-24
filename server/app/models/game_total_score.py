@@ -9,3 +9,11 @@ class GameTotalScore(db.Model):
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.user_id'), primary_key=True)
     total_score = db.Column(db.Integer, nullable=False)
     rank = db.Column(db.Integer)
+
+    def to_dict(self):
+        return {
+            "game_id": self.game_id,
+            "user_id": self.user_id,
+            "total_score": self.total_score,
+            "rank": self.rank
+        }

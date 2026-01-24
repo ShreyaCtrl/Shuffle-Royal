@@ -8,3 +8,11 @@ class PlayerRoundScore(db.Model):
     round_id = db.Column(UUID(as_uuid=True), db.ForeignKey('rounds.round_id'), primary_key=True)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.user_id'), primary_key=True)
     score = db.Column(db.Integer, nullable=False)
+
+
+    def to_dict(self):
+        return {
+            "round_id": self.round_id,
+            "user_id": self.user_id,
+            "score": self.score
+        }

@@ -11,6 +11,13 @@ class Room(db.Model):
     games = db.relationship('Game', backref='room', lazy=True)
     members = db.relationship('RoomMember', backref='room', lazy=True)
 
+    def to_dict(self):
+        return {
+            "room_id": self.room_id,
+            "name": self.name,
+            "created_at": self.created_at
+        }
+
 # from mongoengine import Document, StringField, ListField, ReferenceField, DateTimeField
 # from datetime import datetime
 # from app.models.users import User_Schema

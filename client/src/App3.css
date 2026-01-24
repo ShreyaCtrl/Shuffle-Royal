@@ -1,0 +1,256 @@
+/* =========================================
+   1. THEME PALETTE DEFINITIONS (The Raw Colors)
+   ========================================= */
+
+:root {
+  --color-text: #000000; /* Dark text for readability */
+
+  --card-bg-primary: #f5f5f5; /* Soft neutral background for cards */
+  --card-accent-orange: #ff7043; /* Warm highlight for buttons */
+  --card-accent-blue: #1976d2; /* Deep blue for player info and badges */
+  --card-accent-teal: #009688; /* Calm teal for secondary actions */
+  --card-accent-purple: #7e57c2; /* Regal purple for decorative borders */
+
+  /* 🧙 Fantasy Quest – Mystical and Immersive */
+  --theme-quest-purple: #6a1b9a; /* Modal headers, fantasy elements */
+  --theme-quest-lavender: #ab47bc; /* Tooltip backgrounds */
+  --theme-quest-indigo: #7e57c2; /* Card rarity indicators */
+  --theme-quest-sky: #42a5f5; /* Action buttons */
+  --theme-quest-cyan: #29b6f6; /* Progress bars */
+  /* --theme-quest */
+
+  /* 🕹️ Retro Arcade – Bold and Nostalgic */
+  --theme-arcade-red: #ff5252; /* Error states, alerts */
+  --theme-arcade-yellow: #ffd740; /* Score highlights */
+  --theme-arcade-green: #31db34; /* Success states */
+  --theme-arcade-blue: #2979ff; /* Navigation links */
+  --theme-arcade-pink: #ff4081; /* Special effects */
+
+  /* 🌲 Woodland Adventure – Calm and Natural */
+  --theme-woodland-brown: #4e342e; /* Footer background */
+  --theme-woodland-tan: #a1887f; /* Card borders */
+  --theme-woodland-cream: #d7ccc8; /* Background panels */
+  --theme-woodland-leaf: #c5e1a5; /* Hover states */
+  --theme-woodland-green: #81c784; /* Success messages */
+
+  /* 🚀 Space Odyssey – Elegant and Futuristic */
+  --theme-space-navy: #1a237e; /* Header background */
+  --theme-space-midnight: #283593; /* Sidebar */
+  --theme-space-pastel-blue: #7986cb; /* Card glow */
+  --theme-space-light: #c5cae9; /* Input fields */
+  --theme-space-accent: #e8eaf6; /* Background overlays */
+}
+
+/* =========================================
+   2. FUNCTIONAL VARIABLE MAPPING (The Logic)
+   ========================================= */
+
+/* Default State / Space Theme */
+body.theme-space {
+    --bg-app: var(--theme-space-navy);
+    --bg-card: var(--theme-space-midnight);
+    --text-main: #000000;
+    --text-muted: var(--theme-space-light);
+    --accent-primary: var(--theme-space-accent);
+    --input-bg: var(--theme-space-navy);
+    --border-color: var(--theme-space-light);
+    /* Link colors */
+    --color-link: var(--theme-space-pastel-blue);
+    --color-link-hover: #ffffff;
+    /* Input field colors */
+    --input-bg: rgba(255, 255, 255, 0.1); /* Semi-transparent white on dark navy */
+    --input-border: var(--theme-space-light);
+    --input-text: #000000;
+    --input-focus: var(--theme-space-pastel-blue);
+    /* Button colors */
+    --btn-primary-bg: var(--theme-space-midnight);
+    --btn-primary-hover: var(--theme-space-pastel-blue);
+    --btn-primary-text: var(--theme-space-navy);
+    --btn-secondary-bg: var(--theme-space-light);
+    --btn-secondary-text: var(--theme-space-navy);
+}
+
+body.theme-quest {
+    --bg-app: var(--theme-quest-purple);
+    --bg-card: #ffffff;
+    --text-main: #2a0a4d;
+    --text-muted: #666;
+    --accent-primary: var(--theme-quest-purple);
+    --input-bg: #fafafa;
+    --border-color: var(--theme-quest-lavender);
+    /* Link colors */
+    --color-link: var(--theme-quest-sky);
+    --color-link-hover: var(--theme-quest-cyan);
+    /* Input field colors */
+    --input-bg: #ffffff;
+    --input-border: var(--theme-quest-lavender);
+    --input-text: #2a0a4d;
+    --input-focus: var(--theme-quest-sky);
+    /* Button colors */
+    --btn-primary-bg: var(--theme-quest-sky);
+    --btn-primary-hover: var(--theme-quest-cyan);
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: var(--card-accent-purple);
+    --btn-secondary-text: #ffffff;
+}
+
+body.theme-arcade {
+    /* --bg-app: var(--theme-arcade-red); */
+    --bg-app: var(--theme-arcade-blue);
+    --bg-card: var(--theme-arcade-blue);
+    --text-main: var(--theme-arcade-green); /* Matrix Green */
+    --text-muted: var(--theme-arcade-yellow);
+    --accent-primary: var(--theme-arcade-red);
+    --input-bg: var(--theme-arcade-blue);
+    --border-color: var(--theme-arcade-pink);
+    --color-link: var(--theme-arcade-yellow);
+    --color-link-hover: var(--theme-arcade-green);
+    --input-bg: #000000;
+    --input-border: var(--theme-arcade-green);
+    --input-text: var(--theme-arcade-green);
+    --input-focus: var(--theme-arcade-yellow);
+    /* Button colors */
+    --btn-primary-bg: var(--theme-arcade-red);
+    --btn-primary-hover: var(--theme-arcade-pink);
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: var(--theme-arcade-yellow);
+    --btn-secondary-text: #000000;
+}
+
+body.theme-woodland {
+    --bg-app: var(--theme-woodland-brown);
+    --bg-card: #ffffff;
+    --text-main: var(--theme-woodland-brown);
+    --text-muted: var(--theme-woodland-tan);
+    --accent-primary: var(--theme-woodland-green);
+    --input-bg: var(--theme-woodland-cream);
+    --border-color: var(--theme-woodland-leaf);
+    --color-link: var(--theme-woodland-green);
+    --color-link-hover: var(--theme-woodland-brown);
+    --input-bg: var(--theme-woodland-cream);
+    --input-border: var(--theme-woodland-tan);
+    --input-text: var(--theme-woodland-brown);
+    --input-focus: var(--theme-woodland-green);
+    /* Button colors */
+    --btn-primary-bg: var(--theme-woodland-green);
+    --btn-primary-hover: var(--theme-woodland-leaf);
+    --btn-primary-text: var(--theme-woodland-brown);
+    --btn-secondary-bg: var(--theme-woodland-tan);
+    --btn-secondary-text: #ffffff;
+}
+
+/* =========================================
+   3. GLOBAL COMPONENT STYLES
+   ========================================= */
+body {
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    transition: background-color 0.4s ease, color 0.4s ease;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+/* Ensure card-primary uses the dynamic variables */
+.card-primary {
+    background-color: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.4s ease;
+}
+
+/* Utility classes used in your Component */
+.scale-105 {
+    transform: scale(1.05);
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Link styles */
+.links {
+    color: var(--color-link);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+.links:hover {
+    color: var(--color-link-hover);
+    text-decoration: underline;
+}
+
+/* Input placeholder styles */
+.input-field {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+    
+    /* Using our new functional variables */
+    background-color: var(--input-bg);
+    border: 2px solid var(--input-border);
+    color: var(--input-text);
+    outline: none;
+}
+
+.input-field::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+.input-field:focus {
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 4px rgba(var(--input-focus), 0.2); /* Subtle glow */
+    transform: translateY(-1px);
+}
+
+/* Button styles */
+/* === Buttons === */
+.button-primary {
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.button-primary:hover {
+    background-color: var(--btn-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.button-primary:active {
+    transform: translateY(0);
+}
+
+.button-secondary {
+    background-color: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.button-secondary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}

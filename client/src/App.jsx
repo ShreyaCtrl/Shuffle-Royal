@@ -3,7 +3,7 @@ import { useNotifications, atalhoTheme } from "reapop";
 import NotificationsSystem from "reapop";
 import { useEffect } from "react";
 
-import "./App.css";
+import "./App3.css";
 import Login from "./components/Login/Login.jsx";
 import SignUp from "./components/SignUp/SignUp.jsx";
 import Landing from "./components/Landing/Landing.jsx";
@@ -15,6 +15,7 @@ import QuestLoader from "./components/Loading/QuestLoader.jsx";
 import SpaceLoader from "./components/Loading/SpaceLoading.jsx";
 import WoodlandLoader from "./components/Loading/WoodlandLoader.jsx";
 import ArcadeLoader from "./components/Loading/ArcadeLoader.jsx";
+import Navbar from "./components/Navbar/Navbar.jsx";
 
 function App() {
   const { notifications, dismissNotification } = useNotifications();
@@ -25,6 +26,7 @@ useEffect(() => {
 }, []);
   return (
     <div className="app">
+      <Navbar />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />

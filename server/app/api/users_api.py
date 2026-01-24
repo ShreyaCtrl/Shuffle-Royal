@@ -196,6 +196,54 @@ def register_user():
 #     except ValueError:
 #         return jsonify({"status": "error", "message": "Invalid token"}), 400
 
+@users_bp.route("/profile/update", methods=["PUT"])
+def update_profile():
+    user_session = session.get("user")
+    user_id = None
+    if user_session:
+        user_id = user_session.get("id")
+    if not user_id:
+        return jsonify({"status": "error", "message": "Unauthorized"}), 401
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"status": "error", "message": "User not found"}), 404
+
+    data = request.get_json() or request.form  # supports both JSON and FormData
+    avatar = data.get("avatar")
+    friends = data.get("friends")
+    password = data.get("password")
+    username = data.get("username")
+    print(password)
+    try:
+        # 3. Update fields if provided
+        if avatar:
+            user.avatar = avatar
+
+        if username:
+            user.username = username
+
+        if password and len(password) >= 6:
+            user.password_hash = generate_password_hash(password)
+
+        if friends is not None:
+            # Assuming your User model has a 'friends' column (JSON or Relationship)
+            user.friends = friends
+
+        # 4. Commit changes
+        db.session.commit()
+
+        return jsonify({
+            "status": "success",
+            "message": "Profile updated!",
+            "user": user.to_dict()  # Ensure your model has a to_dict() method
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+
 @users_bp.route("/auth/callback", methods=["POST"])
 def google_auth():
     data = request.get_json()

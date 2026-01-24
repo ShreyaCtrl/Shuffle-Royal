@@ -387,13 +387,42 @@
 import React, { useState, useEffect } from "react";
 import { API_URL } from "../../../config";
 import { useNotifications } from "reapop";
+import useFetchProfile from "../../hooks/useFetchProfile";
 import useUserRoomsData from "../../hooks/useUserRoomsData"; // Using the "all rooms" hook
+import useUpdateProfile from "../../hooks/useUpdateProfile";
+
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState({ username: "", avatar: "", password: "", friends: "" });
   const [isEditing, setIsEditing] = useState(false);
   const { notify } = useNotifications();
+  const {
+    updateProfile,
+    updating
+  } = useUpdateProfile();
+  const {
+    user: profileUser,
+    setUser: setProfileUser,
+    loading: refreshProfile
+  } = useFetchProfile();
+
+  useEffect(() => {
+    if (profileUser) {
+      setUser(profileUser);
+      setForm({
+        username: profileUser.username,
+        avatar: profileUser.avatar,
+        password: "",
+        friends: profileUser.friends?.join(", ") || "",
+      });
+    }
+  }, [profileUser, isEditing]);
+  
+
+  // const handleChange = (e) => {
+  //   setForm({ ...form, [e.target.name]: e.target.value });
+  // };
 
   // Fetch data for ALL rooms the user is in
   const {
@@ -402,63 +431,42 @@ export default function ProfilePage() {
     refreshAll: refreshLeaderboard,
   } = useUserRoomsData();
 
-  // ✅ Fetch user profile
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await fetch(`${API_URL}/profile/me`, {
-          credentials: "include",
-        });
-        const data = await res.json();
-        if (data.status === "success") {
-          setUser(data.user);
-          setForm({
-            avatar: data.user.avatar || "",
-            password: "",
-            friends: data.user.friends?.join(", ") || "",
-          });
-        } else {
-          notify(data.message, { status: "error" });
-        }
-      } catch (err) {
-        notify("❌ Failed to fetch profile", { status: "error" });
-      }
-    };
-    fetchProfile();
-  }, [notify]);
+  
+  // // ✅ Fetch user profile
+  // useEffect(() => {
+  //   const fetchProfile = async () => {
+  //     try {
+  //       const res = await fetch(`${API_URL}/profile/me`, {
+  //         credentials: "include",
+  //       });
+  //       const data = await res.json();
+  //       if (data.status === "success") {
+  //         setProfileUser(data.user);
+  //         setForm({
+  //           avatar: data.user.avatar || "",
+  //           password: "",
+  //           friends: data.user.friends?.join(", ") || "",
+  //         });
+  //       } else {
+  //         notify(data.message, { status: "error" });
+  //       }
+  //     } catch (err) {
+  //       notify("❌ Failed to fetch profile", { status: "error" });
+  //     }
+  //   };
+  //   fetchProfile();
+  // }, [notify]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSave = async () => {
-    try {
-      const payload = {
-        avatar: form.avatar,
-        password: form.password,
-        friends: form.friends
-          .split(",")
-          .map((f) => f.trim())
-          .filter((f) => f),
-      };
-
-      const res = await fetch(`${API_URL}/profile/update`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        credentials: "include",
-      });
-      const data = await res.json();
-
-      if (data.status === "success") {
-        notify("✅ Profile updated successfully!", { status: "success" });
-        setUser(data.user);
-        setIsEditing(false);
-      } else {
-        notify(`❌ ${data.message}`, { status: "error" });
-      }
-    } catch (err) {
-      notify("❌ Error updating profile", { status: "error" });
+    const result = await updateProfile(form);
+    
+    if (result.success) {
+      setUser(result.user);
+      setIsEditing(false);
     }
   };
 
@@ -473,7 +481,7 @@ export default function ProfilePage() {
       <div className="card-primary p-6">
         <h2
           className="text-2xl text-uppercase text-center mb-6 font-bold"
-          style={{ color: "var(--theme-quest-purple)" }}
+          style={{ color: "var(--accent-primary)" }}
         >
           Your Profile
         </h2>
@@ -497,39 +505,75 @@ export default function ProfilePage() {
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base">
-          <div>
-            <p>
-              <strong>Username:</strong> {user.username}
+        <div className="flex flex-col text-sm md:text-base">
+          {isEditing ? (
+            <>
+              <p className="p-2 text-xl">
+              <strong>Username:</strong> 
+              </p>
+              
+                <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              value={form.username}
+              onChange={handleChange}
+              className="input-field mt-4 text-center max-w-xs p-2"
+              />
+              <p className="p-2 text-xl">
+              <strong>Password:</strong>
             </p>
-            <p>
-              <strong>Email:</strong> {user.email}
-            </p>
-            <p>
-              <strong>Global Score:</strong>{" "}
-              <span style={{ color: "var(--theme-arcade-yellow)" }}>
-                {user.total_score}
-              </span>
-            </p>
-          </div>
-          <div>
-            <p>
+            <input
+              type="text"
+              name="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+              className="input-field mt-4 text-center max-w-xs p-2 "
+            />
+            {/* <input
+              type="text"
+              name="friends"
+              placeholder="Friends (comma separated)"
+              value={form.friends}
+              onChange={handleChange}
+              className="input-field mt-4 text-center max-w-xs p-2 text-yellow-500"
+              /> */}
+              <p className="p-2 text-xl">
               <strong>Games Played:</strong> {user.games_played}
             </p>
-            <p>
+            <p className="p-2 text-xl">
               <strong>Games Won:</strong> {user.games_won}
             </p>
-            <p>
+              </>
+          ) : (
+              <>
+                <p className="p-2 text-xl">
+              <strong>Username:</strong> {user.username}
+              </p>
+              <p className="p-2 text-xl">
+              <strong>Email:</strong> {user.email}
+            </p>
+            <p className="p-2 text-xl">
+              <strong>Games Played:</strong> {user.games_played}
+            </p>
+            <p className="p-2 text-xl">
+              <strong>Games Won:</strong> {user.games_won}
+            </p>
+            <p className="p-2 text-xl">
               <strong>Friends:</strong> {user.friends?.length || 0}
             </p>
-          </div>
+              </>
+            )}
+            
+            
         </div>
 
         <div className="flex justify-center mt-6 gap-3">
           {isEditing ? (
             <>
-              <button onClick={handleSave} className="button-primary px-6 py-2">
-                Save
+              <button onClick={handleSave} disabled={updating} className="button-primary px-6 py-2">
+                {updating ? "Saving..." : "Save"}
               </button>
               <button
                 onClick={() => setIsEditing(false)}
@@ -551,92 +595,92 @@ export default function ProfilePage() {
       </div>
 
       {/* --- Room Leaderboard Section --- */}
-      <div
-        className="card-primary p-8"
-        style={{ borderLeft: "6px solid var(--theme-arcade-yellow)" }}
-      >
-        <div className="flex-between mb-6">
-          <h3
-            className="text-xl text-uppercase font-bold"
-            style={{ color: "var(--theme-quest-purple)" }}
-          >
-            Room Rankings
-          </h3>
-          <button
-            onClick={refreshLeaderboard}
-            className="links text-bold text-sm"
-            disabled={leaderboardLoading}
-            style={{ background: "none", border: "none", cursor: "pointer" }}
-          >
-            {leaderboardLoading ? "Consulting Oracles..." : "Refresh Scores"}
-          </button>
-        </div>
+        <div
+          className="card-primary p-8"
+          style={{ borderLeft: "6px solid var(--theme-arcade-yellow)" }}
+        >
+          <div className="flex-between mb-6">
+            <h3
+              className="text-xl text-uppercase font-bold"
+              style={{ color: "var(--theme-quest-purple)" }}
+            >
+              Room Rankings
+            </h3>
+            <button
+              onClick={refreshLeaderboard}
+              className="links text-bold text-sm"
+              disabled={leaderboardLoading}
+              style={{ background: "none", border: "none", cursor: "pointer" }}
+            >
+              {leaderboardLoading ? "Consulting Oracles..." : "Refresh Scores"}
+            </button>
+          </div>
 
-        {Object.keys(roomsData).length > 0 ? (
-          Object.entries(roomsData).map(([roomId, roomDetails]) => (
-            <div key={roomId} className="mb-8 last:mb-0">
-              <h4
-                className="text-md font-semibold mb-3"
-                style={{ color: "var(--theme-arcade-blue)" }}
-              >
-                🏰 Room: {roomDetails.name}...
-              </h4>
-              <div className="overflow-x-auto rounded-md shadow-sm border">
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr
-                      style={{
-                        backgroundColor: "var(--theme-space-accent)",
-                        color: "var(--theme-space-navy)",
-                      }}
-                    >
-                      <th className="p-3 text-left">Rank</th>
-                      <th className="p-3 text-left">Player</th>
-                      <th className="p-3 text-right">Score</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {roomDetails.leaderboard.map((player) => (
+          {Object.keys(roomsData).length > 0 ? (
+            Object.entries(roomsData).map(([roomId, roomDetails]) => (
+              <div key={roomId} className="mb-8 last:mb-0">
+                <h4
+                  className="text-md font-semibold mb-3"
+                  style={{ color: "var(--theme-arcade-blue)" }}
+                >
+                  🏰 Room: {roomDetails.name}...
+                </h4>
+                <div className="overflow-x-auto rounded-md shadow-sm border">
+                  <table className="w-full border-collapse">
+                    <thead>
                       <tr
-                        key={player.username}
-                        className="border-b transition-colors"
                         style={{
-                          backgroundColor:
-                            player.username === user.username
-                              ? "var(--theme-arcade-yellow)"
-                              : "white",
-                          color:
-                            player.username === user.username
-                              ? "var(--theme-space-navy)"
-                              : "inherit",
+                          backgroundColor: "var(--theme-space-accent)",
+                          color: "var(--theme-space-navy)",
                         }}
                       >
-                        <td className="p-3 font-bold">#{player.rank}</td>
-                        <td className="p-3">{player.username}</td>
-                        <td
-                          className="p-3 text-right font-bold"
+                        <th className="p-3 text-left">Rank</th>
+                        <th className="p-3 text-left">Player</th>
+                        <th className="p-3 text-right">Score</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {roomDetails.leaderboard.map((player) => (
+                        <tr
+                          key={player.username}
+                          className="border-b transition-colors"
                           style={{
+                            backgroundColor:
+                              player.username === user.username
+                                ? "var(--theme-arcade-yellow)"
+                                : "white",
                             color:
                               player.username === user.username
-                                ? "black"
-                                : "var(--card-accent-teal)",
+                                ? "var(--theme-space-navy)"
+                                : "inherit",
                           }}
                         >
-                          {player.score}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                          <td className="p-3 font-bold">#{player.rank}</td>
+                          <td className="p-3">{player.username}</td>
+                          <td
+                            className="p-3 text-right font-bold"
+                            style={{
+                              color:
+                                player.username === user.username
+                                  ? "black"
+                                  : "var(--card-accent-teal)",
+                            }}
+                          >
+                            {player.score}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-center text-muted p-4">
-            You haven't joined any rooms yet!
-          </p>
-        )}
-      </div>
+            ))
+          ) : (
+            <p className="text-center text-muted p-4">
+              You haven't joined any rooms yet!
+            </p>
+          )}
+        </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 # Technologies Used
-- Frontend: React, Vite, Supabase Auth, React Router, reapop Notifications
+- Frontend: React, Vite, Google Auth, React Router, reapop Notifications
 - Backend: Flask, SQLAlchemy, Supabase Database, Flask-CORS, Redis, Celery
 - Deployment: Supabase, Ngrok
 
@@ -370,3 +370,88 @@ EXECUTE FUNCTION update_room_member_ranks();
 - https://lottiefiles.com/free-animations/growing-ivy - Woodland
 - https://lottiefiles.com/free-animations/pixellated-card-flip - Arcade
 - https://lottiefiles.com/free-animation/globe-A37pxTwfZY - Space
+
+# Redis 
+The JSON structure you've provided is a great **conceptual model** for the data you want to track, but as a direct **Redis schema**, it needs some flattening to be performant. In Redis, storing one giant nested JSON object (a "Blob") makes it very difficult to update just one player's card or prediction without rewriting the whole thing.
+
+Here is how to map your JSON structure to **native Redis data types** to ensure your game is fast and scalable.
+
+---
+
+### 1. Room Context (Redis Hashes & Sets)
+
+Instead of a nested JSON, split the room metadata from the player list.
+
+* **Metadata (Hash):** `room:{room_id}:meta`
+* Fields: `status`, `created_at`, `admin_id`.
+
+
+* **Players (Set):** `room:{room_id}:players`
+* Values: `user_id_1`, `user_id_2`.
+* *Note:* Keep the "names" in a global `user:{id}` hash so you don't duplicate them.
+
+
+
+### 2. Game Totals (Redis Sorted Set)
+
+Your JSON shows a list of standings. In Redis, use a **Sorted Set** (`ZSET`).
+
+* **Key:** `game:{game_id}:standings`
+* **Member:** `user_id`
+* **Score:** `total_score`
+* **Command:** `ZINCRBY game:123:standings 10 user_1` (adds 10 points to their current total).
+
+### 3. Rounds (The "Live" Data)
+
+This is where your JSON has a lot of nesting. In Redis, you should create a specific key for each round to allow concurrent updates.
+
+#### A. Predictions & Round Scores (Hash)
+
+* **Key:** `game:{game_id}:round:{r_num}:stats`
+* **Fields:**
+* `user:{id}:prediction`
+* `user:{id}:score` (score for just this round)
+
+
+
+#### B. Card Deals / Tricks (List or Hash)
+
+Your JSON uses `deal1`, `deal2`, etc. In card games, these are often called "tricks."
+
+* **Trick History (List):** `game:{game_id}:round:{r_num}:trick:{t_num}:cards`
+* Store a JSON string of `{ "user_id": "...", "card": "..." }` in a list as they are played.
+
+
+* **Trick Winner (String):** `game:{game_id}:round:{r_num}:trick:{t_num}:winner`
+* Value: `user_id`
+
+
+
+---
+
+### Comparison: Your JSON vs. Redis Best Practices
+
+| Feature | Your JSON Approach | Redis Native Approach (Better) |
+| --- | --- | --- |
+| **Updating 1 Card** | Must fetch, parse, update, and re-save the whole JSON. | `RPUSH game:1:round:1:trick:1:cards "..."` (Instant) |
+| **Calculating Rank** | Loop through the array and sort in your API code. | `ZREVRANGE game:1:standings 0 -1` (Redis sorts it for you) |
+| **Data Safety** | High risk of "Race Conditions" (two players playing at once). | Atomic commands ensure no data is lost. |
+
+---
+
+### Recommended Data Mapping Table
+
+| Data Point | Redis Key Pattern | Redis Type |
+| --- | --- | --- |
+| **Room Info** | `room:{room_id}:meta` | **Hash** |
+| **Current Players** | `room:{room_id}:players` | **Set** |
+| **Total Scores** | `game:{game_id}:leaderboard` | **Sorted Set** |
+| **Predictions** | `game:{game_id}:round:{n}:predictions` | **Hash** |
+| **Cards Played** | `game:{game_id}:round:{n}:trick:{m}:cards` | **List** |
+| **Trick Result** | `game:{game_id}:round:{n}:trick:{m}:winner` | **String** |
+
+### Next Step
+
+Your JSON is a perfect format for **sending the final result to your PostgreSQL database** once the game ends.
+
+Would you like me to write a **Node.js/JavaScript function** that gathers all these separate Redis keys and formats them back into the exact JSON you just shared?

@@ -1,4 +1,5 @@
 import redis
+from urllib.parse import urlparse
 from app.core.config import host, password, username, port
 
 redis_client = None
@@ -9,10 +10,11 @@ def redis_connect():
         return redis_client
 
     try:
+
         print(host, port, username, password)
         redis_client = redis.Redis(
             host=host,
-            port=15034,
+            port=port,
             decode_responses=True,
             username=username,
             password=password,

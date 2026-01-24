@@ -10,7 +10,7 @@ def supabase_connect():
             port=db_port,
             dbname=db_database
         )
-        print("Connection successful!")
+        print("Connection successful : SUPABASE !")
 
         # Create a cursor to execute SQL queries
         cursor = connection.cursor()

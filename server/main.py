@@ -18,14 +18,14 @@ from app.core.connect_supabase import supabase_connect
 # from app.signals.game_signals import update_user_stats
 from app.api.users_api import users_bp
 from app.api.profile_api import profile_bp
-# from app.api.game_api import game_bp
+from app.api.game_api import game_bp
 
 app = Flask(__name__)
 CORS(
     app,
     origins=["http://localhost:5173", "http://127.0.0.1:5173", "https://72f5672a3fd1.ngrok-free.app"],
     supports_credentials=True,
-    methods=["GET", "POST", "OPTIONS"],
+    methods=["GET", "POST", "OPTIONS", "PUT"],
     allow_headers=["Content-Type", "Authorization"]
 )
 app.secret_key = 'aksdwodkfjksdfjwo'
@@ -55,7 +55,7 @@ redis_client = redis_connect()
 
 app.register_blueprint(users_bp)
 app.register_blueprint(profile_bp)
-# app.register_blueprint(game_bp)
+app.register_blueprint(game_bp)
 
 # app = Flask(__name__)
 # print(redis_uri, '------------------------------main.py')

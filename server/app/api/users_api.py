@@ -298,3 +298,23 @@ def google_auth():
         print(f"Google auth error: {e}")
         message = f"Google authentication failed: {str(e)}"
         return jsonify({"status": "error", "message": message}), 500
+
+
+@users_bp.route("/profile/<identifier>", methods=["GET"])
+def get_other_profile(identifier):
+    # Try to find user by ID first, then by username
+    user = User.query.filter(
+        (User.username == identifier)).first()
+
+    if not user:
+        return jsonify({"status": "error", "message": "User not found"}), 404
+
+    # Use your to_dict() method but consider removing private fields for 'other' users
+    profile_data = user.to_dict()
+    print(profile_data)
+    profile_data.pop("email", None)  # Privacy: don't show emails to others
+
+    return jsonify({
+        "status": "success",
+        "user": profile_data
+    }), 200

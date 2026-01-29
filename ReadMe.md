@@ -75,6 +75,7 @@ ngrok start --all --config=ngrok.yml
 # Notes
 - Ensure that all environment variables are correctly set up in both the client and server `.env` files.
 - Make sure to handle any additional configurations required for deployment if deploying to a production environment.
+- While connecting to the supabase database, make sure to use session pooler to connect via your api if your host does'nt support ipv6 and needs only ipv4 (session pooler supports ipv4)
 
 # Triggers and Functions in Supabase
 - Create the following functions and triggers in your Supabase database to handle game state changes and notifications.
@@ -372,11 +373,6 @@ EXECUTE FUNCTION update_room_member_ranks();
 - https://lottiefiles.com/free-animation/globe-A37pxTwfZY - Space
 
 # Redis 
-The JSON structure you've provided is a great **conceptual model** for the data you want to track, but as a direct **Redis schema**, it needs some flattening to be performant. In Redis, storing one giant nested JSON object (a "Blob") makes it very difficult to update just one player's card or prediction without rewriting the whole thing.
-
-Here is how to map your JSON structure to **native Redis data types** to ensure your game is fast and scalable.
-
----
 
 ### 1. Room Context (Redis Hashes & Sets)
 
@@ -450,8 +446,3 @@ Your JSON uses `deal1`, `deal2`, etc. In card games, these are often called "tri
 | **Cards Played** | `game:{game_id}:round:{n}:trick:{m}:cards` | **List** |
 | **Trick Result** | `game:{game_id}:round:{n}:trick:{m}:winner` | **String** |
 
-### Next Step
-
-Your JSON is a perfect format for **sending the final result to your PostgreSQL database** once the game ends.
-
-Would you like me to write a **Node.js/JavaScript function** that gathers all these separate Redis keys and formats them back into the exact JSON you just shared?

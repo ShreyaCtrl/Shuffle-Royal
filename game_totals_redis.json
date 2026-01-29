@@ -1,0 +1,10 @@
+{
+    "room:roomId:game_totals:gameId": {
+        "standings": [
+            {
+                "user_id": "user_id",
+                "score": 0
+            }
+        ]
+    }
+}

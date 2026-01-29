@@ -1,0 +1,32 @@
+{
+    "game:{game_id}:round:{r_num}:trick:{tr_num}:cards": [
+        {
+            "user_id": "user_id",
+            "card": "card"
+        },
+        {
+            "user_id": "user_id",
+            "card": "card"
+        },
+        {
+            "user_id": "user_id",
+            "card": "card"
+        },
+        {
+            "user_id": "user_id",
+            "card": "card"
+        },
+        {
+            "user_id": "user_id",
+            "card": "card"
+        },
+        {
+            "user_id": "user_id",
+            "card": "card"
+        },
+        {
+            "user_id": "user_id",
+            "card": "card"
+        }
+    ]
+}

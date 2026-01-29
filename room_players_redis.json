@@ -1,0 +1,12 @@
+{
+    "room:roomId:players": {
+        "player_id1": {
+            "name": "player_name",
+            "status": "active"
+        },
+        "player_id2":{
+            "name": "player_name",
+            "status": "inactive"
+        }
+    }
+}

@@ -1,0 +1,81 @@
+{
+    "room_context": {
+        "key": "db_id",
+        "metadata": {
+            "status": "active",
+            "created_at": "2022-01-01T00:00:00.000Z",
+            "admin": "admin_id",
+            "players": [
+                {
+                    "id": "player_id",
+                    "name": "player_name"
+                }
+            ]
+        }
+    },
+    "game_totals": {
+        "key": "something",
+        "standings": [
+            {
+                "user_id": "user_id",
+                "score": 0
+            }
+        ]
+    },
+    "rounds": [
+        {
+            "round_1": {
+                "key": "something",
+                "total_cards": 7,
+                "predictions": [
+                    {
+                        "user_id": "user_id",
+                        "prediction": "prediction"
+                    }
+                ],
+                "scores": [
+                    {
+                        "user_id": "user_id",
+                        "score": 0
+                    }
+                ],
+                "card_deals": {
+                    "deal1": {
+                        "hand_won_by": "user_id",
+                        "suit": "suit",
+                        "cards": [
+                            {
+                                "user_id": "user_id",
+                                "card": "card"
+                            },
+                            {
+                                "user_id": "user_id",
+                                "card": "card"
+                            },
+                            {
+                                "user_id": "user_id",
+                                "card": "card"
+                            },
+                            {
+                                "user_id": "user_id",
+                                "card": "card"
+                            },
+                            {
+                                "user_id": "user_id",
+                                "card": "card"
+                            },
+                            {
+                                "user_id": "user_id",
+                                "card": "card"
+                            },
+                            {
+                                "user_id": "user_id",
+                                "card": "card"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

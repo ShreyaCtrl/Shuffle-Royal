@@ -1,0 +1,8 @@
+{
+    "game:{game_id}:round:{r_num}:stats": {
+        "user_id": {
+            "prediction": "prediction",
+            "score": 0
+        }
+    }
+}

@@ -36,6 +36,7 @@ def get_current_profile():
             "username": user.username,
             "email": user.email,
             "avatar": user.avatar_url,
+            "password": user.password_hash,
             "games_played": user.games_played,
             "games_won": user.games_won
         }

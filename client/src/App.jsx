@@ -9,6 +9,8 @@ import SignUp from "./components/SignUp/SignUp.jsx";
 import Landing from "./components/Landing/Landing.jsx";
 import GameDescription from "./components/GameDescription/GameDescription.jsx";
 import Scoreboard from "./components/ScoreBoard/Scoreboard.jsx";
+import WaitingRoom from "./components/WaitingRoom/WaitingRoom.jsx";
+import JoinRoom from "./components/JoinRoom/JoinRoom.jsx";
 import ProfilePage from "./components/Profile/Profile.jsx";
 import ThemeSettings from "./components/ThemeSettings/ThemeSettings.jsx";
 import QuestLoader from "./components/Loading/QuestLoader.jsx";
@@ -16,6 +18,7 @@ import SpaceLoader from "./components/Loading/SpaceLoading.jsx";
 import WoodlandLoader from "./components/Loading/WoodlandLoader.jsx";
 import ArcadeLoader from "./components/Loading/ArcadeLoader.jsx";
 import Navbar from "./components/Navbar/Navbar.jsx";
+import PublicProfile from "./components/PublicProfile/PublicProfile.jsx";
 
 function App() {
   const { notifications, dismissNotification } = useNotifications();
@@ -34,10 +37,13 @@ useEffect(() => {
           <Route path="signup" element={<SignUp />} />
           <Route path="game-desc" element={<GameDescription />} />
           <Route path="scoreboard" element={<Scoreboard />} />
+          <Route path="waiting-room/:roomName" element={<WaitingRoom />} />
+          <Route path="join-room" element={<JoinRoom />} />
           <Route
             path="profile"
             element={<ProfilePage />}
           />
+          <Route path="profile/:username" element={<PublicProfile />} />
           <Route path="theme-settings" element={<ThemeSettings />} />
           <Route path="quest-loading" element={<QuestLoader />} />
           <Route path="arcade-loading" element={<ArcadeLoader />} />

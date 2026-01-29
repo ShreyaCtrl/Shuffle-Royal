@@ -19,6 +19,7 @@ from app.core.connect_supabase import supabase_connect
 from app.api.users_api import users_bp
 from app.api.profile_api import profile_bp
 from app.api.game_api import game_bp
+from app.api.room_api import room_bp
 
 app = Flask(__name__)
 CORS(
@@ -56,11 +57,17 @@ redis_client = redis_connect()
 app.register_blueprint(users_bp)
 app.register_blueprint(profile_bp)
 app.register_blueprint(game_bp)
+app.register_blueprint(room_bp)
 
 # app = Flask(__name__)
 # print(redis_uri, '------------------------------main.py')
-socketio = SocketIO(app, async_mode='eventlet', message_queue=redis_uri, ping_timeout=60, ping_interval=30)  # Optional: specify async mode
-#
+socketio = SocketIO(app,
+                    async_mode='eventlet',
+                    message_queue=redis_uri,
+                    ping_timeout=60,
+                    cors_allowed_origins="*",
+                    ping_interval=30)  # Optional: specify async mode
+print(app.url_map)
 if __name__ == '__main__':
     # app.run(port=5000, host='localhost', debug=True)
     socketio.run(app, host="0.0.0.0", port=5000, debug=True)
